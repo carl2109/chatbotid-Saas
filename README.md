@@ -7,6 +7,3 @@ Dibangun dengan **Flask**, **WhatsApp Cloud API**, **PostgreSQL**, **Render Host
 - Auto-reply pesan WhatsApp menggunakan WhatsApp Cloud API.
 - Sistem multi-tenant (bisa dipakai banyak klien UMKM dalam 1 aplikasi).
 - Integrasi Stripe untuk pembayaran & subscription otomatis.
-- Database PostgreSQL di Render (cloud-ready).
-- Hosting di Render dengan domain bawaan (atau custom domain).
-- Aman, scalable, siap dipakai untuk bisnis nyata.
