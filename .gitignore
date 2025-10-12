@@ -1,0 +1,27 @@
+# Jangan upload file environment asli
+.env
+
+# Python cache & compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# Database lokal (kalau ada SQLite)
+*.sqlite3
+*.db
+
+# Editor configs
+.vscode/
+.idea/
+
+# Mac system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
