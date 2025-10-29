@@ -15,15 +15,23 @@ app = Flask(__name__)
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")  
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
-# ==========================
-# Database setup (PostgreSQL di Render)
-# ==========================
+# =========================
+# Database setup (PostgreSQL di Railway)
+# =========================
 def get_db_connection():
-    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
-    return conn
+    try:
+        conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+        return conn
+    except Exception as e:
+        print("❌ Database connection failed:", e)
+        return None
+
 
 def init_db():
     conn = get_db_connection()
+    if conn is None:
+        return "Database connection failed."
+
     cur = conn.cursor()
 
     # Table clients → data UMKM/tenant
@@ -42,27 +50,18 @@ def init_db():
     cur.execute('''
         CREATE TABLE IF NOT EXISTS auto_replies (
             id SERIAL PRIMARY KEY,
-            client_id INT REFERENCES clients(id) ON DELETE CASCADE,
+            client_id INTEGER REFERENCES clients(id),
             keyword TEXT,
-            reply TEXT
-        )
-    ''')
-
-    # Table conversations → log chat
-    cur.execute('''
-        CREATE TABLE IF NOT EXISTS conversations (
-            id SERIAL PRIMARY KEY,
-            client_id INT REFERENCES clients(id) ON DELETE CASCADE,
-            user_phone TEXT,
-            message TEXT,
-            reply TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            reply_message TEXT
         )
     ''')
 
     conn.commit()
     cur.close()
     conn.close()
+
+    return "✅ Database initialized successfully!"
+
 
 init_db()
 
@@ -187,10 +186,19 @@ def stripe_webhook():
 
     return jsonify({"status": "ok"})
 
+@app.route("/init-db")
+def init_database():
+    result = init_db()
+    return result
+
+@app.route("/")
+def home():
+    return "🚀 Chatbot SaaS is running successfully on Railway!"
+
 # ==========================
 # Run app
 # ==========================
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port) 
