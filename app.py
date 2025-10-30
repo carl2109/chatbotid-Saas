@@ -5,7 +5,7 @@ import requests
 import stripe
 from dotenv import load_dotenv
 
-# Load environment variables (.env atau Render Dashboard)
+# Load environment variables (.env atau Railway Dashboard)
 load_dotenv()
 
 # Flask app
