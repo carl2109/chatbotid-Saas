@@ -56,6 +56,18 @@ def init_db():
         )
     ''')
 
+    # Table conversations → log percakapan
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS conversations (
+            id SERIAL PRIMARY KEY,
+            client_id INTEGER REFERENCES clients(id),
+            user_phone TEXT,
+            message TEXT,
+            reply TEXT,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
     conn.commit()
     cur.close()
     conn.close()
@@ -109,7 +121,7 @@ def webhook(client_id):
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("""
-            SELECT reply FROM auto_replies
+            SELECT reply_message FROM auto_replies
             WHERE client_id = %s AND LOWER(keyword) = LOWER(%s)
         """, (client_id, text))
         row = cur.fetchone()
@@ -200,5 +212,5 @@ def home():
 # ==========================
 if __name__ == "__main__":
     import os
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", 8000))
     app.run(host="0.0.0.0", port=port) 
