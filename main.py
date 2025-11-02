@@ -107,6 +107,32 @@ def send_whatsapp_message(client_id, to, message):
     print(f"[{client_id}] WA Response:", response.text)
 
 # ==========================
+# Webhook utama untuk verifikasi WhatsApp Cloud API
+# ==========================
+@app.route("/webhook", methods=["GET", "POST"])
+def whatsapp_verify():
+    if request.method == "GET":
+        # ✅ Langkah verifikasi dari Meta
+        verify_token = "verslaliberte_token"  # token bebas, tapi harus sama dengan yang kamu masukkan di Meta Developer
+        mode = request.args.get("hub.mode")
+        token = request.args.get("hub.verify_token")
+        challenge = request.args.get("hub.challenge")
+
+        if mode and token:
+            if token == verify_token:
+                print("✅ Webhook verified!")
+                return challenge, 200
+            else:
+                return "Verification token mismatch", 403
+        return "Missing parameters", 400
+
+    elif request.method == "POST":
+        # ✅ Pesan masuk dari WhatsApp (opsional log)
+        data = request.get_json()
+        print("📩 Data masuk dari WhatsApp:", data)
+        return jsonify({"status": "received"}), 200
+
+# ==========================
 # Webhook WhatsApp per client
 # ==========================
 @app.route("/<int:client_id>/webhook", methods=["POST"])
