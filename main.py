@@ -109,9 +109,6 @@ def send_whatsapp_message(client_id, to, message):
 # ==========================
 # Webhook utama untuk verifikasi WhatsApp Cloud API
 # ==========================
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
 
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
