@@ -109,32 +109,24 @@ def send_whatsapp_message(client_id, to, message):
 # ==========================
 # Webhook utama untuk verifikasi WhatsApp Cloud API
 # ==========================
-
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
-
 @app.route("/webhook", methods=["GET", "POST"])
-def webhook():
+def whatsapp_verify():
     if request.method == "GET":
-        verify_token = "versabotid_token"
+        verify_token = "versabotid_token"  # harus sama dengan yang kamu masukkan di Meta Developer
         mode = request.args.get("hub.mode")
         token = request.args.get("hub.verify_token")
         challenge = request.args.get("hub.challenge")
 
-        if mode and token:
-            if token == verify_token:
-                print("✅ Webhook verified!")
-                return challenge, 200
-            else:
-                return "Verification token mismatch", 403
-        return "Missing parameters", 400
+        if mode == "subscribe" and token == verify_token:
+            print("✅ Webhook verified successfully!")
+            return challenge, 200
+        else:
+            print("❌ Verification failed.")
+            return "Verification failed", 403
 
     elif request.method == "POST":
         data = request.get_json()
         print("📩 Data masuk dari WhatsApp:", data)
-
-        # ✅ Tambahkan penanganan semua tipe event
         entry = data.get("entry", [])
         for e in entry:
             changes = e.get("changes", [])
@@ -147,7 +139,6 @@ def webhook():
                 print("Value:", value)
 
         return jsonify({"status": "received"}), 200
-
 
 
 # ==========================
