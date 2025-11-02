@@ -113,7 +113,7 @@ def send_whatsapp_message(client_id, to, message):
 def whatsapp_verify():
     if request.method == "GET":
         # ✅ Langkah verifikasi dari Meta
-        verify_token = "verslaliberte_token"  # token bebas, tapi harus sama dengan yang kamu masukkan di Meta Developer
+        verify_token = "versabotid_token"  # token bebas, tapi harus sama dengan yang kamu masukkan di Meta Developer
         mode = request.args.get("hub.mode")
         token = request.args.get("hub.verify_token")
         challenge = request.args.get("hub.challenge")
