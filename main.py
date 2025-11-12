@@ -131,7 +131,7 @@ def send_whatsapp_message(client_id, to, message):
 @app.route("/webhook", methods=["GET", "POST"])
 def whatsapp_webhook():
     if request.method == "GET":
-        VERIFY_TOKEN = "versabotid_token"  # harus sama dengan di Meta Developer
+        VERIFY_TOKEN = os.getenv("VERIFY_TOKEN", "versabotid_token_local_fallback")
         mode = request.args.get("hub.mode")
         token = request.args.get("hub.verify_token")
         challenge = request.args.get("hub.challenge")
